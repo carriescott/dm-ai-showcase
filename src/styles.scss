@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: 14px/18px "Deepmind Sans",Helvetica,Arial,sans-serif;
+}
+
+app-algorithms, app-algorithm-detail, app-algorithm-comparison {
+  padding: 24px;
+  width: 100%;
+  background-color: #f0f5f5;
+}
+
+.mat-form-field.mat-form-field-invalid .mat-form-field-ripple, .mat-form-field.mat-form-field-invalid .mat-form-field-ripple.mat-accent {
+  background-color: #f0f5f5;
+}
+
+.mat-card:not([class*=mat-elevation-z]) {
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0), 0px 1px 1px 0px rgba(0, 0, 0, 0), 0px 1px 3px 0px rgba(0, 0, 0, 0);
+}
