@@ -1,6 +1,8 @@
 <div fxLayout="row" fxFill>
   <section id="nav" class="nav" fxLayoutAlign=" center" fxLayout="column">
     <img class="logo" src="assets/img/logo.png">
+    <span fxFlex="2"></span>
+    <p class="tag-line">AI Showcase</p>
     <span fxFlex="10"></span>
     <button mat-icon-button routerLink="ai-algorithms">
       <mat-icon class="material-icon-white"
@@ -8,13 +10,9 @@
         search
       </mat-icon>
     </button>
-    <button mat-icon-button routerLink="ai-algorithms/algorithm-comparison">
-      <mat-icon class="material-icon-white"
-                matTooltip="Compare AI Performance">
-        compare
-      </mat-icon>
-    </button>
+    <span fxFlex></span>
   </section>
+
   <router-outlet></router-outlet>
 </div>
 

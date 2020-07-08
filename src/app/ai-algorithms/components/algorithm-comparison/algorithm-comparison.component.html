@@ -4,13 +4,32 @@
 <h3>AI Comparison</h3>
 
 <section fxLayout="row" fxLayoutAlign="center ">
-  <mat-card class="card" fxFlex="30">
+  <mat-card class="card" fxFlex="60">
     <mat-card-content>
-      <p>Memory: {{memoryAverage}}</p>
-      <p>Logic: {{logicAverage}}</p>
-      <p>Planning: {{planningAverage}}</p>
+      <ngx-charts-bar-vertical-2d
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="multi"
+        [gradient]="gradient"
+        [xAxis]="showXAxis"
+        [yAxis]="showYAxis"
+        [legend]="showLegend"
+        [showXAxisLabel]="showXAxisLabel"
+        [showYAxisLabel]="showYAxisLabel"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        [legendTitle]="legendTitle"
+        (select)="onSelect($event)">
+      </ngx-charts-bar-vertical-2d>
+
     </mat-card-content>
   </mat-card>
+
+  <section *ngIf="show">
+    <p>Memory: {{memoryAverage}}</p>
+    <p>Logic: {{logicAverage}}</p>
+    <p>Planning: {{planningAverage}}</p>
+  </section>
 
 </section>
 

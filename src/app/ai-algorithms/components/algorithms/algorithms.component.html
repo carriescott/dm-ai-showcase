@@ -42,6 +42,9 @@ Compare AI
     <button mat-icon-button (click)="addToCompareArray(agent.id)">
       <mat-icon>folder</mat-icon>
     </button>
+    <button mat-icon-button routerLink="detail/{{agent.id}}">
+      <mat-icon>search</mat-icon>
+    </button>
   </mat-list-item>
 </mat-list>
 

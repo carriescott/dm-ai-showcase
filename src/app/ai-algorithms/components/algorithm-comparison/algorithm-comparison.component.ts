@@ -17,6 +17,68 @@ export class AlgorithmComparisonComponent implements OnInit {
   logicAverage;
   planning = [];
   planningAverage;
+  show: boolean = false;
+
+
+  // options
+  showXAxis: boolean = true;
+  showYAxis: boolean = true;
+  gradient: boolean = false;
+  showLegend: boolean = true;
+  showXAxisLabel: boolean = true;
+  xAxisLabel: string = 'Task';
+  showYAxisLabel: boolean = true;
+  yAxisLabel: string = 'Average Score';
+  legendTitle: string = 'AI';
+
+  view: any[] = [700, 400];
+
+  multi = [
+    {
+      "name": "Memory",
+      "series": [
+        {
+          "name": "IMPALA",
+          "value": 27
+        },
+        {
+          "name": "Alpha",
+          "value": 10
+        }
+      ]
+    },
+
+    {
+      "name": "Logic",
+      "series": [
+        {
+          "name": "IMPALA",
+          "value": 91
+        },
+        {
+          "name": "Alpha",
+          "value": 53
+        }
+      ]
+    },
+    {
+      "name": "Planning",
+      "series": [
+        {
+          "name": "IMPALA",
+          "value": 67
+        },
+        {
+          "name": "Alpha",
+          "value": 82
+        }
+      ]
+    }
+    ];
+
+  colorScheme = {
+    domain: ['#0053d6', '#ffdb13']
+  };
 
   constructor(private route: ActivatedRoute,
               private agentsApi: AgentsApi,
@@ -86,6 +148,20 @@ export class AlgorithmComparisonComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+
+  onSelect(data): void {
+    this.show = true;
+    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+  }
+
+  onActivate(data): void {
+    console.log('Activate', JSON.parse(JSON.stringify(data)));
+  }
+
+  onDeactivate(data): void {
+    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
 
 }

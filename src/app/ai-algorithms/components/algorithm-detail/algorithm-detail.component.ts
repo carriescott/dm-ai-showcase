@@ -14,10 +14,40 @@ export class AlgorithmDetailComponent implements OnInit {
   agent;
   memory = [];
   memoryAverage;
+  memoryGames = [];
+  memoryData;
   logic = [];
   logicAverage;
+  logicGames = [];
+  logicData;
   planning = [];
   planningAverage;
+  planningGames = [];
+  planningData;
+
+  averages;
+
+
+
+  // options
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = 'game';
+  showYAxisLabel = true;
+  yAxisLabel = 'score';
+  view: any[] = [600, 400];
+
+  colorScheme = {
+    domain: ['#0053d6', '#14234b']
+  };
+
+  colorSchemeThree = {
+    domain: ['#0053d6', '#14234b', '#ffdb13']
+  };
+
 
   constructor(private route: ActivatedRoute,
               private agentsApi: AgentsApi,
@@ -45,16 +75,33 @@ export class AlgorithmDetailComponent implements OnInit {
       switch (task.category) {
         case 'memory':
           this.memory.push(task.score);
+          this.memoryGames.push(task);
           break;
         case 'logic':
           this.logic.push(task.score);
+          this.logicGames.push(task);
           break;
         case 'planning':
           this.planning.push(task.score);
+          this.planningGames.push(task);
           break;
       }
     }
     this.buildAvgObj();
+    console.log(this.memoryGames);
+    this.memoryData = this.memoryGames.map(item => ({
+      name: item.name,
+      value: item.score
+    }));
+    this.logicData = this.logicGames.map(item => ({
+      name: item.name,
+      value: item.score
+    }));
+    this.planningData = this.planningGames.map(item => ({
+      name: item.name,
+      value: item.score
+    }));
+    console.log(this.memoryData);
   }
 
   buildAvgObj() {
@@ -62,6 +109,20 @@ export class AlgorithmDetailComponent implements OnInit {
     this.logicAverage = this.averageObj(this.logic, this.logic.length);
     this.planningAverage = this.averageObj(this.planning, this.planning.length);
     console.log(this.memoryAverage, this.logicAverage, this.planningAverage);
+    this.averages = [
+      {
+        name: 'memory',
+        value: this.memoryAverage
+      },
+      {
+        name: 'logic',
+        value: this.logicAverage
+      },
+      {
+        name: 'planning',
+        value: this.planningAverage
+      },
+    ];
   }
 
   averageObj(item, length) {
@@ -78,6 +139,10 @@ export class AlgorithmDetailComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  onSelect(data): void {
+    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
   }
 
 

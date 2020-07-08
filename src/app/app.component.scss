@@ -1,13 +1,20 @@
 .nav {
   background: #0053d6;
   height: 100%;
-  padding: 24px;
+  padding: 16px;
 }
 
 .logo {
-  height:48px;
+  height:68px;
 }
 
 .material-icon-white {
   color: white;
+}
+
+.tag-line {
+  //transform: rotate(-90deg);
+  //width: max-content;
+  color: white;
+  font-family: sans-serif;
 }
