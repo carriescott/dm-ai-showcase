@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Observable, BehaviorSubject, throwError as observableThrowError } from 'rxjs/index';
 import {Agent} from '../models/agent.interface';
 import {AGENTS} from '../data/ai-algorithms-data';
 import {AgentId} from '../models/agent.interface';
@@ -11,6 +11,12 @@ import {asFallibleAsyncResponse} from './helper.service';
 })
 
 export class AgentsApi {
+
+  agentArray = new BehaviorSubject<any>(null);
+
+  publishAgentArray(data: any) {
+    this.agentArray.next(data);
+  }
 
   listAgents(): Promise<ReadonlyArray<Agent>> {
     return asFallibleAsyncResponse(AGENTS);
@@ -24,6 +30,11 @@ export class AgentsApi {
   getAgent(id: AgentId): Promise<Agent | undefined> {
     return asFallibleAsyncResponse(AGENTS.find(agent => agent.id === id));
   }
+
+
+  // showAlert(message) {
+  //   this._snackBar.open(message, null, {duration: appConfig.snackBarDuration});
+  // }
 
 }
 

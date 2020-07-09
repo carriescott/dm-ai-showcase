@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import {AgentsApi} from '../../services/ai-algorithms.service';
-
+import {Agent} from '../../models/agent.interface';
 
 @Component({
   selector: 'app-algorithm-detail',
@@ -11,43 +11,39 @@ import {AgentsApi} from '../../services/ai-algorithms.service';
 })
 export class AlgorithmDetailComponent implements OnInit {
 
-  agent;
-  memory = [];
+  agent: Agent;
+  memoryScores = [];
   memoryAverage;
   memoryGames = [];
   memoryData;
-  logic = [];
+  logicScores = [];
   logicAverage;
   logicGames = [];
   logicData;
-  planning = [];
+  planningScores = [];
   planningAverage;
   planningGames = [];
   planningData;
 
+  error: boolean;
+  errorMessage;
+
   averages;
 
+  loading: boolean;
 
 
-  // options
+  // graph options
   showXAxis = true;
   showYAxis = true;
-  gradient = false;
-  showLegend = true;
   showXAxisLabel = true;
   xAxisLabel = 'game';
   showYAxisLabel = true;
   yAxisLabel = 'score';
-  view: any[] = [600, 400];
-
+  view = [400];
   colorScheme = {
-    domain: ['#0053d6', '#14234b']
-  };
-
-  colorSchemeThree = {
     domain: ['#0053d6', '#14234b', '#ffdb13']
   };
-
 
   constructor(private route: ActivatedRoute,
               private agentsApi: AgentsApi,
@@ -58,37 +54,46 @@ export class AlgorithmDetailComponent implements OnInit {
   }
 
   getAgent() {
+    this.loading = true;
+    this.error = false;
     const id = +this.route.snapshot.paramMap.get('id');
     this.agentsApi.getAgent(id)
       .then(response => {
-        this.agent = response;
-        console.log('agent', this.agent);
-        this.buildStatsObj();
+        this.loading = false;
+        this.agent = {...response};
+        this.buildStatsArrays();
       }).catch(error => {
-      console.log('Looks like there was a problem: \n', error);
+      this.loading = false;
+      this.error = true;
+      this.errorMessage = 'Looks like there was a problem: \n' + error;
     });
   }
 
-  buildStatsObj() {
+  /**** build 2 arrays for each of the task categories, one to hold the each  **/
+
+  buildStatsArrays() {
     this.emptyStatsObj();
     for (const task of this.agent.tasks) {
       switch (task.category) {
         case 'memory':
-          this.memory.push(task.score);
+          this.memoryScores.push(task.score);
           this.memoryGames.push(task);
           break;
         case 'logic':
-          this.logic.push(task.score);
+          this.logicScores.push(task.score);
           this.logicGames.push(task);
           break;
         case 'planning':
-          this.planning.push(task.score);
+          this.planningScores.push(task.score);
           this.planningGames.push(task);
           break;
       }
     }
-    this.buildAvgObj();
-    console.log(this.memoryGames);
+    this.buildComparisonArray();
+    this.buildGraphData();
+  }
+
+  buildGraphData() {
     this.memoryData = this.memoryGames.map(item => ({
       name: item.name,
       value: item.score
@@ -104,11 +109,10 @@ export class AlgorithmDetailComponent implements OnInit {
     console.log(this.memoryData);
   }
 
-  buildAvgObj() {
-    this.memoryAverage = this.averageObj(this.memory, this.memory.length);
-    this.logicAverage = this.averageObj(this.logic, this.logic.length);
-    this.planningAverage = this.averageObj(this.planning, this.planning.length);
-    console.log(this.memoryAverage, this.logicAverage, this.planningAverage);
+  buildComparisonArray() {
+    this.memoryAverage = this.averageObj(this.memoryScores, this.memoryScores.length);
+    this.logicAverage = this.averageObj(this.logicScores, this.logicScores.length);
+    this.planningAverage = this.averageObj(this.planningScores, this.planningScores.length);
     this.averages = [
       {
         name: 'memory',
@@ -132,18 +136,15 @@ export class AlgorithmDetailComponent implements OnInit {
   }
 
   emptyStatsObj(){
-    this.memory = [];
-    this.logic = [];
-    this.planning = [];
+    this.memoryScores = [];
+    this.logicScores = [];
+    this.planningScores = [];
   }
 
   goBack(): void {
     this.location.back();
   }
 
-  onSelect(data): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
-  }
 
 
 

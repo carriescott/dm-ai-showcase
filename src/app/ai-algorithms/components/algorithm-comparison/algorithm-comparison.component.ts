@@ -1,81 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AgentsApi} from '../../services/ai-algorithms.service';
 import {Location} from '@angular/common';
+import { Subscription } from 'rxjs';
+import {Agent} from '../../models/agent.interface';
 
 @Component({
   selector: 'app-algorithm-comparison',
   templateUrl: './algorithm-comparison.component.html',
   styleUrls: ['./algorithm-comparison.component.scss']
 })
-export class AlgorithmComparisonComponent implements OnInit {
+export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
 
-  agent;
+  subAgentArray: Subscription;
+  subscriptionList = new Subscription();
+
+  agent: Agent;
   memory = [];
   memoryAverage;
   logic = [];
   logicAverage;
   planning = [];
   planningAverage;
-  show: boolean = false;
 
 
-  // options
-  showXAxis: boolean = true;
-  showYAxis: boolean = true;
-  gradient: boolean = false;
-  showLegend: boolean = true;
-  showXAxisLabel: boolean = true;
-  xAxisLabel: string = 'Task';
-  showYAxisLabel: boolean = true;
-  yAxisLabel: string = 'Average Score';
-  legendTitle: string = 'AI';
+  agentArray;
+  comparisonArray;
 
-  view: any[] = [700, 400];
+  testArray = [];
 
-  multi = [
-    {
-      "name": "Memory",
-      "series": [
-        {
-          "name": "IMPALA",
-          "value": 27
-        },
-        {
-          "name": "Alpha",
-          "value": 10
-        }
-      ]
-    },
 
-    {
-      "name": "Logic",
-      "series": [
-        {
-          "name": "IMPALA",
-          "value": 91
-        },
-        {
-          "name": "Alpha",
-          "value": 53
-        }
-      ]
-    },
-    {
-      "name": "Planning",
-      "series": [
-        {
-          "name": "IMPALA",
-          "value": 67
-        },
-        {
-          "name": "Alpha",
-          "value": 82
-        }
-      ]
-    }
-    ];
-
+  // graph options
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = 'Task';
+  showYAxisLabel = true;
+  yAxisLabel = 'Average Score';
+  legendTitle = 'AI';
+  view: any[] = [700];
   colorScheme = {
     domain: ['#0053d6', '#ffdb13']
   };
@@ -85,33 +50,78 @@ export class AlgorithmComparisonComponent implements OnInit {
               private location: Location) { }
 
   ngOnInit(): void {
-    // const array = history.state.data;
-    const AI1 = +this.route.snapshot.paramMap.get('AI1');
-    console.log(AI1);
-    this.getAgent(AI1);
-    const AI2 = +this.route.snapshot.paramMap.get('AI2');
-    console.log(AI2);
-    // this.getAgent(AI1);
-    // const optionTwo = +this.route.snapshot.paramMap.get('optionTwo');
-    // console.log(optionTwo);
+    this.getAgentArray();
+  }
+
+  getAgentArray() {
+    this.subAgentArray =
+      this.agentsApi.agentArray.subscribe
+      (data => {
+        if (data !== null) {
+          this.agentArray = data;
+          this.buildTest(this.agentArray);
+        }
+      });
+    this.subscriptionList.add(this.subAgentArray);
+  }
+
+  buildTest(test){
+    for (const item of test) {
+      const result = this.buildStatsObj(item);
+      this.testArray.push(result);
+    }
+    this.buildComparisonObj(this.testArray);
+  }
+
+  buildComparisonObj(data) {
+    this.comparisonArray = [
+      {
+        name: 'Memory',
+        series: [
+          {
+            name: data[0].name,
+            value: data[0].memory
+          },
+          {
+            name: data[1].name,
+            value: data[1].memory
+          }
+        ]
+      },
+
+      {
+        name: 'Logic',
+        series: [
+          {
+            name: data[0].name,
+            value: data[0].logic
+          },
+          {
+            name: data[1].name,
+            value: data[1].logic
+          }
+        ]
+      },
+      {
+        name: 'Planning',
+        series: [
+          {
+            name: data[0].name,
+            value: data[0].planning
+          },
+          {
+            name: data[1].name,
+            value: data[1].memory
+          }
+        ]
+      }
+    ];
   }
 
 
-  getAgent(id) {
-    this.agentsApi.getAgent(id)
-      .then(response => {
-        this.agent = response;
-        console.log('agent', this.agent);
-        this.buildStatsObj();
-      }).catch(error => {
-      console.log('Looks like there was a problem: \n', error);
-    });
-  }
-
-
-  buildStatsObj() {
+  buildStatsObj(item) {
     this.emptyStatsObj();
-    for (const task of this.agent.tasks) {
+    for (const task of item.tasks) {
       switch (task.category) {
         case 'memory':
           this.memory.push(task.score);
@@ -124,14 +134,21 @@ export class AlgorithmComparisonComponent implements OnInit {
           break;
       }
     }
-    this.buildAvgObj();
+    const result = this.buildAvgObj(item);
+    return result;
   }
 
-  buildAvgObj() {
+  buildAvgObj(item) {
     this.memoryAverage = this.averageObj(this.memory, this.memory.length);
     this.logicAverage = this.averageObj(this.logic, this.logic.length);
     this.planningAverage = this.averageObj(this.planning, this.planning.length);
-    console.log(this.memoryAverage, this.logicAverage, this.planningAverage);
+    const averages = {
+      name: item.name,
+      memory: this.memoryAverage,
+      logic: this.logicAverage,
+      planning: this.planningAverage
+    };
+    return averages;
   }
 
   averageObj(item, length) {
@@ -150,18 +167,8 @@ export class AlgorithmComparisonComponent implements OnInit {
     this.location.back();
   }
 
-
-  onSelect(data): void {
-    this.show = true;
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
-  }
-
-  onActivate(data): void {
-    console.log('Activate', JSON.parse(JSON.stringify(data)));
-  }
-
-  onDeactivate(data): void {
-    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
+  ngOnDestroy(): void {
+    this.subscriptionList.unsubscribe();
   }
 
 }

@@ -8,6 +8,7 @@ import { AlgorithmDetailComponent } from './components/algorithm-detail/algorith
 import {ReactiveFormsModule} from '@angular/forms';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   declarations: [AlgorithmsComponent, AlgorithmDetailComponent, AlgorithmComparisonComponent],
@@ -22,7 +23,8 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
     MaterialModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    NgxChartsModule
+    NgxChartsModule,
+    SharedModule
   ]
 })
 export class AiAlgorithmsModule { }

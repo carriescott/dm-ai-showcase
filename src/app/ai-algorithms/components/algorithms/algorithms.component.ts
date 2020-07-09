@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {AgentsApi} from '../../services/ai-algorithms.service';
-import { FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { AgentsApi } from '../../services/ai-algorithms.service';
+import { FormGroup, FormBuilder} from '@angular/forms';
+import { Router} from '@angular/router';
+import { Agent } from '../../models/agent.interface';
 
 
 @Component({
@@ -11,59 +12,80 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class AlgorithmsComponent implements OnInit {
 
+  compare = false;
   searchForm: FormGroup;
-  agents;
-  searchResults;
-  compareArray = [];
+  agents: Agent[];
+  selectedAgents;
+  loading: boolean;
+  errorMessage: string;
+  error: boolean;
+
   constructor(private agentsApi: AgentsApi,
               private fb: FormBuilder,
               private router: Router) { }
 
-
   ngOnInit(): void {
-    this.getAgents();
     this.searchForm = this.fb.group ({
       search: [''],
     });
   }
 
   getAgents() {
+    this.agents = [];
+    this.error = false;
+    this.loading = true;
     this.agentsApi.listAgents()
       .then(response => {
-        this.agents = response;
-        console.log('agents', this.agents);
+        this.loading = false;
+        this.agents = [...response];
       }).catch(error => {
-        console.log('Looks like there was a problem: \n', error);
+        this.loading = false;
+        this.error = true;
+        this.errorMessage = 'Looks like there was a problem: \n' + error;
       });
   }
 
   searchAgents() {
     this.agents = [];
+    this.loading = true;
+    this.error = false;
     this.agentsApi.searchAgents(this.searchForm.controls.search.value)
       .then(response => {
-      this.searchResults = response;
-      this.agents = this.searchResults;
-      console.log('searchResults', this.searchResults);
+        this.loading = false;
+        this.agents = [...response];
     }).catch(error => {
-      console.log('Looks like there was a problem: \n', error);
+      this.loading = false;
+      this.error = true;
+      this.errorMessage = 'Looks like there was a problem: \n' + error;
     });
   }
 
-  consoleLog(){
-    console.log(this.searchForm.controls.search.value);
+
+  compareAIs(){
+    this.compare = true;
+  }
+  cancelCompare(){
+    this.compare = false;
   }
 
-  enableSelection() {
-    document.getElementById('compare-ai');
+  consoleLog() {
+
   }
 
-  addToCompareArray(id) {
-    this.compareArray.push(id);
+  refresh(){
+    this.getAgents();
   }
 
-  compareAIs(array){
-    console.log(array);
-    this.router.navigate(['/ai-algorithms/algorithm-comparison', {AI1: array[0], AI2: array[1]}]);
+  go() {
+    this.agentsApi.publishAgentArray(this.selectedAgents);
+    this.router.navigate(['/ai-algorithms/algorithm-comparison']);
+  }
+
+
+
+  onSelection(e, v){
+    this.selectedAgents = v.selected.map(item => item.value);
+    console.log(this.selectedAgents.length);
   }
 
 

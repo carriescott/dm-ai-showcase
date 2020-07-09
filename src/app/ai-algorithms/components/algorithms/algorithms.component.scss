@@ -1,15 +1,3 @@
-.deep-mind-button {
-  background-color: #0053d6;
-  border-radius: 20px;
-  color: white;
-}
-
-.deep-mind-button:hover {
-  background-color: #ffdb13;
-}
-
-
-
 mat-form-field {
   padding: 10px 16px 0px 16px;
   height: 80px;
@@ -17,8 +5,46 @@ mat-form-field {
   background-color:#f0f5f5;
 }
 
-mat-list-item:hover, mat-list-item:focus, mat-list-item:focus{
-  background-color: #ffdb13;
-  cursor: pointer;
+.mat-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button {
+  border-radius: 20px;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 
+.truncate {
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
+  padding-top: 24px;
+}
+
+.form {
+  padding: 24px;
+  background-color: white;
+}
+
+.results {
+  padding-top: 24px;
+}
+
+.results-container {
+  width: 50%;
+}
+
+.item {
+  max-width: 80%;
+}
+
+.list-description {
+ max-width: 300px
+}
