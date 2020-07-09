@@ -42,7 +42,7 @@ export class AlgorithmDetailComponent implements OnInit {
   yAxisLabel = 'score';
   view = [400];
   colorScheme = {
-    domain: ['#0053d6', '#14234b', '#ffdb13']
+    domain: ['#0053d6', '#14234b', '#ff4081']
   };
 
   constructor(private route: ActivatedRoute,

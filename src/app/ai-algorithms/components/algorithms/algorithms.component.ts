@@ -14,11 +14,12 @@ export class AlgorithmsComponent implements OnInit {
 
   compare = false;
   searchForm: FormGroup;
-  agents: Agent[];
+  agents: Agent[] = [];
   selectedAgents;
-  loading: boolean;
+  loading = false;
   errorMessage: string;
-  error: boolean;
+  error = false;
+  compareDisabled = true;
 
   constructor(private agentsApi: AgentsApi,
               private fb: FormBuilder,
@@ -34,6 +35,7 @@ export class AlgorithmsComponent implements OnInit {
     this.agents = [];
     this.error = false;
     this.loading = true;
+    this.compareDisabled = true;
     this.agentsApi.listAgents()
       .then(response => {
         this.loading = false;
@@ -49,6 +51,7 @@ export class AlgorithmsComponent implements OnInit {
     this.agents = [];
     this.loading = true;
     this.error = false;
+    this.compareDisabled = true;
     this.agentsApi.searchAgents(this.searchForm.controls.search.value)
       .then(response => {
         this.loading = false;
@@ -60,7 +63,6 @@ export class AlgorithmsComponent implements OnInit {
     });
   }
 
-
   compareAIs(){
     this.compare = true;
   }
@@ -68,24 +70,14 @@ export class AlgorithmsComponent implements OnInit {
     this.compare = false;
   }
 
-  consoleLog() {
-
-  }
-
-  refresh(){
-    this.getAgents();
-  }
-
   go() {
     this.agentsApi.publishAgentArray(this.selectedAgents);
     this.router.navigate(['/ai-algorithms/algorithm-comparison']);
   }
 
-
-
   onSelection(e, v){
     this.selectedAgents = v.selected.map(item => item.value);
-    console.log(this.selectedAgents.length);
+    this.compareDisabled = this.selectedAgents.length < 2;
   }
 
 

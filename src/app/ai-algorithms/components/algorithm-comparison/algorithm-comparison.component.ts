@@ -40,9 +40,9 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
   showYAxisLabel = true;
   yAxisLabel = 'Average Score';
   legendTitle = 'AI';
-  view: any[] = [700];
+  view: any[] = [600];
   colorScheme = {
-    domain: ['#0053d6', '#ffdb13']
+    domain: ['#0053d6', '#ff4081']
   };
 
   constructor(private route: ActivatedRoute,

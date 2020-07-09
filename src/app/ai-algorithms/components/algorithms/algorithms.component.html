@@ -38,15 +38,19 @@
     Get All AIs
   </button>
 
-  <button *ngIf="!compare && agents.length > 1" mat-button class="deep-mind-button" id="compare-ai"(click)="compareAIs()">
-    Compare AI
+  <button *ngIf="!compare && agents.length > 1"
+          mat-button
+          class="deep-mind-button"
+          id="compare-ai"(click)="compareAIs()">
+    Compare AIs
   </button>
 
   <button *ngIf="compare" mat-button class="deep-mind-button" id="cancel"(click)="cancelCompare()">
-    Cancel Compare
+    Cancel
   </button>
 
   <button *ngIf="compare && agents"
+          [disabled]="compareDisabled"
           mat-button class="deep-mind-button"
           (click)= "go()">
     Compare

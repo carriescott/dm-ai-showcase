@@ -1,6 +1,10 @@
 <section fxLayout="column" fxFlex>
 <app-deepmind-svg></app-deepmind-svg>
 
+  <button mat-button class="back deep-mind-button" (click)= "goBack()">
+    back
+  </button>
+
   <section class="loading-container" fxFlex fxLayout="row" fxLayoutAlign="center center" *ngIf="loading">
     <app-loading fxLayoutAlign="center center"></app-loading>
   </section>
@@ -22,9 +26,7 @@
   <span fxFlex></span>
 </header>
 
-<button mat-button class="deep-mind-button" (click)= "goBack()">
-  back
-</button>
+
 
 <section fxLayout="row wrap" fxLayoutAlign="center center">
   <mat-card *ngIf="agent">
