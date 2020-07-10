@@ -145,7 +145,7 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  /**** Build an object of category task averages */
+  /**** Build an object of category task score averages */
   buildAvgObj(item) {
     this.memoryAverage = calAverage(this.memoryScores, this.memoryScores.length);
     this.logicAverage = calAverage(this.logicScores, this.logicScores.length);
