@@ -1,5 +1,5 @@
-# DeepMind AI Showcase
-DeepMind AI Showcase is an interactive application for browsing and comparing DeepMind's AI algorithms​. 
+# DM AI Showcase
+DM AI Showcase is an interactive application for browsing and comparing AI algorithms​. 
 
 ## Install and Run
 1. Clone this repository
