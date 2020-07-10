@@ -6,11 +6,20 @@ mat-sidenav-container, mat-sidenav-content, mat-sidenav {
   height: 100%;
 }
 
+.mat-drawer-container {
+  background-color: #d4ffed;
+}
+
 app-algorithms, app-algorithm-detail, app-algorithm-comparison {
   padding: 32px;
   width: 100%;
   background-color: #d4ffed;
   min-height: -webkit-fill-available;
+}
+
+mat-list-item:hover, mat-list-item:focus, mat-list-item:focus{
+  background-color: rgba(0,0,0,0.05);;
+  cursor: pointer;
 }
 
 .mat-card {
@@ -25,8 +34,6 @@ app-algorithms, app-algorithm-detail, app-algorithm-comparison {
   box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0), 0px 1px 1px 0px rgba(0, 0, 0, 0), 0px 1px 3px 0px rgba(0, 0, 0, 0);
 }
 
-
-q
 .mat-body, .mat-body-1, .mat-typography {
   font: 400 14px/20px 'DM Serif Display', serif;
   letter-spacing: normal;
@@ -73,11 +80,4 @@ q
   background-color: white;
   color: grey ;
 }
-
-mat-list-item:hover, mat-list-item:focus, mat-list-item:focus{
-  background-color: rgba(0,0,0,0.05);;
-  cursor: pointer;
-}
-
-
 

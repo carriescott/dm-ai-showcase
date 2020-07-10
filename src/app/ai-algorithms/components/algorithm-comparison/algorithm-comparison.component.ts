@@ -4,6 +4,7 @@ import {AgentsApi} from '../../services/ai-algorithms.service';
 import {Location} from '@angular/common';
 import { Subscription } from 'rxjs';
 import {Agent} from '../../models/agent.interface';
+import {calAverage} from '../../services/helper';
 
 @Component({
   selector: 'app-algorithm-comparison',
@@ -16,21 +17,21 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
   subscriptionList = new Subscription();
 
   agent: Agent;
-  memory = [];
+  agentArray;
+  comparisonArray;
+  averagesArray = [];
+
+  memoryScores = [];
   memoryAverage;
-  logic = [];
+
+  logicScores = [];
   logicAverage;
-  planning = [];
+
+  planningScores = [];
   planningAverage;
 
 
-  agentArray;
-  comparisonArray;
-
-  testArray = [];
-
-
-  // graph options
+  /*** Set graph options */
   showXAxis = true;
   showYAxis = true;
   gradient = false;
@@ -53,27 +54,32 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
     this.getAgentArray();
   }
 
+  /**** Subscribe to AI agent comparison array*/
   getAgentArray() {
     this.subAgentArray =
       this.agentsApi.agentArray.subscribe
       (data => {
         if (data !== null) {
           this.agentArray = data;
-          this.buildTest(this.agentArray);
+          this.buildAveragesArray(this.agentArray);
         }
       });
     this.subscriptionList.add(this.subAgentArray);
   }
 
-  buildTest(test){
-    for (const item of test) {
-      const result = this.buildStatsObj(item);
-      this.testArray.push(result);
+  /**** Build an array of average objects,
+   * one object per agent */
+  buildAveragesArray(agents){
+    for (const agent of agents) {
+      const result = this.buildCategoryScoreArrays(agent);
+      this.averagesArray.push(result);
     }
-    this.buildComparisonObj(this.testArray);
+    this.buildComparisonArray(this.averagesArray);
   }
 
-  buildComparisonObj(data) {
+  /**** Format averagesArrays to create a data set
+   *  which can be used to generate the comparison graph */
+  buildComparisonArray(data) {
     this.comparisonArray = [
       {
         name: 'Memory',
@@ -118,19 +124,20 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
     ];
   }
 
-
-  buildStatsObj(item) {
-    this.emptyStatsObj();
+  /**** Build an array for each of the task category to
+   * hold all the scores in tha category */
+  buildCategoryScoreArrays(item) {
+    this.emptyArrays();
     for (const task of item.tasks) {
       switch (task.category) {
         case 'memory':
-          this.memory.push(task.score);
+          this.memoryScores.push(task.score);
           break;
         case 'logic':
-          this.logic.push(task.score);
+          this.logicScores.push(task.score);
           break;
         case 'planning':
-          this.planning.push(task.score);
+          this.planningScores.push(task.score);
           break;
       }
     }
@@ -138,10 +145,11 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  /**** Build an object of category averages */
   buildAvgObj(item) {
-    this.memoryAverage = this.averageObj(this.memory, this.memory.length);
-    this.logicAverage = this.averageObj(this.logic, this.logic.length);
-    this.planningAverage = this.averageObj(this.planning, this.planning.length);
+    this.memoryAverage = calAverage(this.memoryScores, this.memoryScores.length);
+    this.logicAverage = calAverage(this.logicScores, this.logicScores.length);
+    this.planningAverage = calAverage(this.planningScores, this.planningScores.length);
     const averages = {
       name: item.name,
       memory: this.memoryAverage,
@@ -151,16 +159,10 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
     return averages;
   }
 
-  averageObj(item, length) {
-    const total = item.reduce((a, b) => a + b, 0);
-    const average = total / length;
-    return average;
-  }
-
-  emptyStatsObj(){
-    this.memory = [];
-    this.logic = [];
-    this.planning = [];
+  emptyArrays(){
+    this.memoryScores = [];
+    this.logicScores = [];
+    this.planningScores = [];
   }
 
   goBack(): void {

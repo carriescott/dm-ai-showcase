@@ -1,9 +1,11 @@
-<section id="nav" class="nav" fxLayoutAlign=" center" fxLayout="column" fxFill>
-  <img class="logo" src="assets/img/logo.png">
+<section id="nav" class="nav" role="navigation" fxLayoutAlign=" center" fxLayout="column" fxFill>
+  <img class="logo" src="assets/img/logo.png" alt="DeepMind Logo">
   <span fxFlex="6"></span>
-  <button mat-icon-button routerLink="ai-algorithms">
+  <button mat-icon-button
+          routerLink="ai-algorithms"
+          aria-label="AI algorithm search">
     <mat-icon class="material-icon-white"
-              matTooltip="Search AI Database">
+              matTooltip="search AI database">
       search
     </mat-icon>
   </button>

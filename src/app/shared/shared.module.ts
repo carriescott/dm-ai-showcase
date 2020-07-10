@@ -9,10 +9,10 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ErrorComponent } from './components/error/error.component';
 
-
 @NgModule({
   declarations: [NavigationComponent, DeepmindSvgComponent, LoadingComponent, ErrorComponent],
   imports: [FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, CommonModule, FlexLayoutModule],
-  exports: [FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, NavigationComponent, DeepmindSvgComponent, LoadingComponent, FlexLayoutModule, ErrorComponent],
+  exports: [FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, NavigationComponent,
+    DeepmindSvgComponent, LoadingComponent, FlexLayoutModule, ErrorComponent],
 })
 export class SharedModule {}

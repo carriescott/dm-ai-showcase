@@ -1,4 +1,15 @@
+/**
+ * Common database helper functions.
+ */
+
 let currentId = 1;
+
+/**** Return average value for provided array */
+export function calAverage(array: number[], length) {
+  const total = array.reduce((a, b) => a + b, 0);
+  const average = total / length;
+  return average;
+}
 
 /** Returns a new unique ID at every invocation. */
 export function nextId() {

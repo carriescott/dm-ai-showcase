@@ -1,6 +1,5 @@
 import {Agent} from '../models/agent.interface';
-import {nextId} from '../services/helper.service';
-
+import {nextId} from '../services/helper';
 
 export const AGENTS: ReadonlyArray<Agent> = [
     {

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import {AgentsApi} from '../../services/ai-algorithms.service';
 import {Agent} from '../../models/agent.interface';
+import {calAverage} from '../../services/helper';
 
 @Component({
   selector: 'app-algorithm-detail',
@@ -12,28 +13,29 @@ import {Agent} from '../../models/agent.interface';
 export class AlgorithmDetailComponent implements OnInit {
 
   agent: Agent;
+  errorMessage;
+  averages;
+
   memoryScores = [];
   memoryAverage;
   memoryGames = [];
   memoryData;
+
   logicScores = [];
   logicAverage;
   logicGames = [];
   logicData;
+
   planningScores = [];
   planningAverage;
   planningGames = [];
   planningData;
 
+  /*** Set UI flags */
   error: boolean;
-  errorMessage;
-
-  averages;
-
   loading: boolean;
 
-
-  // graph options
+  /*** Set graph options */
   showXAxis = true;
   showYAxis = true;
   showXAxisLabel = true;
@@ -50,13 +52,14 @@ export class AlgorithmDetailComponent implements OnInit {
               private location: Location) { }
 
   ngOnInit(): void {
-    this.getAgent();
+    const id = +this.route.snapshot.paramMap.get('id');
+    this.getAgent(id);
   }
 
-  getAgent() {
+  /*** Fetch agent with specific id */
+  getAgent(id) {
     this.loading = true;
     this.error = false;
-    const id = +this.route.snapshot.paramMap.get('id');
     this.agentsApi.getAgent(id)
       .then(response => {
         this.loading = false;
@@ -69,10 +72,8 @@ export class AlgorithmDetailComponent implements OnInit {
     });
   }
 
-  /**** build 2 arrays for each of the task categories, one to hold the each  **/
-
+  /**** Build 2 arrays for each of the task categories, one for scores and the other for games */
   buildStatsArrays() {
-    this.emptyStatsObj();
     for (const task of this.agent.tasks) {
       switch (task.category) {
         case 'memory':
@@ -89,10 +90,12 @@ export class AlgorithmDetailComponent implements OnInit {
           break;
       }
     }
-    this.buildComparisonArray();
     this.buildGraphData();
+    this.buildComparisonArray();
   }
 
+  /**** Format games arrays for each of the task categories,
+   * to create data sets which can be used to generate each category graph */
   buildGraphData() {
     this.memoryData = this.memoryGames.map(item => ({
       name: item.name,
@@ -106,13 +109,14 @@ export class AlgorithmDetailComponent implements OnInit {
       name: item.name,
       value: item.score
     }));
-    console.log(this.memoryData);
   }
 
+  /**** Build an array of category averages to create a data set, 'averages'
+   *  which can be used to generate the overview graph */
   buildComparisonArray() {
-    this.memoryAverage = this.averageObj(this.memoryScores, this.memoryScores.length);
-    this.logicAverage = this.averageObj(this.logicScores, this.logicScores.length);
-    this.planningAverage = this.averageObj(this.planningScores, this.planningScores.length);
+    this.memoryAverage = calAverage(this.memoryScores, this.memoryScores.length);
+    this.logicAverage = calAverage(this.logicScores, this.logicScores.length);
+    this.planningAverage = calAverage(this.planningScores, this.planningScores.length);
     this.averages = [
       {
         name: 'memory',
@@ -129,23 +133,8 @@ export class AlgorithmDetailComponent implements OnInit {
     ];
   }
 
-  averageObj(item, length) {
-    const total = item.reduce((a, b) => a + b, 0);
-    const average = total / length;
-    return average;
-  }
-
-  emptyStatsObj(){
-    this.memoryScores = [];
-    this.logicScores = [];
-    this.planningScores = [];
-  }
-
   goBack(): void {
     this.location.back();
   }
-
-
-
 
 }

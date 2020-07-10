@@ -1,15 +1,22 @@
 <section fxLayout="column" fxFlex>
-<app-deepmind-svg></app-deepmind-svg>
+  <app-deepmind-svg></app-deepmind-svg>
 
-  <button mat-button class="back deep-mind-button" (click)= "goBack()">
+  <button mat-button
+          aria-label="back button"
+          class="back deep-mind-button"
+          (click)="goBack()">
     back
   </button>
 
-  <section class="loading-container" fxFlex fxLayout="row" fxLayoutAlign="center center" *ngIf="loading">
+  <section fxFlex fxLayout="row"
+           fxLayoutAlign="center center"
+           *ngIf="loading">
     <app-loading fxLayoutAlign="center center"></app-loading>
   </section>
 
-  <section class="loading-container" fxFlex fxLayout="row" fxLayoutAlign="center center" *ngIf="!loading && error">
+  <section fxFlex fxLayout="row"
+           fxLayoutAlign="center center"
+           *ngIf="!loading && error">
     <app-error
       [errorMessage]="errorMessage"
       fxLayoutAlign="center center">
@@ -17,86 +24,81 @@
   </section>
 
   <ng-container *ngIf="!loading && agent">
-<header fxLayout="row" fxLayoutAlign="center center">
-  <span fxFlex></span>
-  <section class="title" fxLayout="column" fxFlex="60">
-    <h2>{{agent.name}}</h2>
-    <h2>{{agent.description}}</h2>
-  </section>
-  <span fxFlex></span>
-</header>
+    <header fxLayout="row" fxLayoutAlign="center center">
+      <span fxFlex></span>
+      <section class="title"
+               fxLayout="column"
+               fxFlex="60">
+        <h2>{{agent.name}}</h2>
+        <h2>{{agent.description}}</h2>
+      </section>
+      <span fxFlex></span>
+    </header>
 
+    <section fxLayout="row wrap" fxLayoutAlign="center center" aria-label="AI stats visualisation">
+      <mat-card aria-label="overview stats">
+        <mat-card-title>Overview</mat-card-title>
+        <mat-card-subtitle>Average score per task category</mat-card-subtitle>
+        <ngx-charts-bar-vertical
+          [view]="view"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          [scheme]="colorScheme"
+          [results]="averages">
+        </ngx-charts-bar-vertical>
+      </mat-card>
 
+      <mat-card aria-label="AI memory stats">
+        <mat-card-title>Memory</mat-card-title>
+        <mat-card-subtitle>Individual task scores</mat-card-subtitle>
+        <ngx-charts-bar-vertical
+          [view]="view"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          [scheme]="colorScheme"
+          [results]="memoryData">
+        </ngx-charts-bar-vertical>
+      </mat-card>
 
-<section fxLayout="row wrap" fxLayoutAlign="center center">
-  <mat-card *ngIf="agent">
-    <mat-card-title>Overview</mat-card-title>
-    <mat-card-subtitle>Average score per task category</mat-card-subtitle>
-    <ngx-charts-bar-vertical
-      [view]="view"
-      [xAxis]="showXAxis"
-      [yAxis]="showYAxis"
-      [showXAxisLabel]="showXAxisLabel"
-      [showYAxisLabel]="showYAxisLabel"
-      [xAxisLabel]="xAxisLabel"
-      [yAxisLabel]="yAxisLabel"
-      [scheme]="colorScheme"
-      [results]="averages">
-    </ngx-charts-bar-vertical>
-</mat-card>
+      <mat-card aria-label="AI logic stats">
+        <mat-card-title>Logic</mat-card-title>
+        <mat-card-subtitle>Individual task scores</mat-card-subtitle>
+        <ngx-charts-bar-vertical
+          [view]="view"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          [scheme]="colorScheme"
+          [results]="logicData">
+        </ngx-charts-bar-vertical>
+      </mat-card>
 
-  <mat-card *ngIf="agent">
-    <mat-card-title>Memory</mat-card-title>
-    <mat-card-subtitle>Individual task scores in the memory category</mat-card-subtitle>
-      <ngx-charts-bar-vertical
-        [view]="view"
-        [xAxis]="showXAxis"
-        [yAxis]="showYAxis"
-        [showXAxisLabel]="showXAxisLabel"
-        [showYAxisLabel]="showYAxisLabel"
-        [xAxisLabel]="xAxisLabel"
-        [yAxisLabel]="yAxisLabel"
-        [scheme]="colorScheme"
-        [results]="memoryData">
-      </ngx-charts-bar-vertical>
-  </mat-card>
-
-
-  <mat-card *ngIf="agent">
-    <mat-card-title>Logic</mat-card-title>
-    <mat-card-subtitle>Individual task scores in the logic category</mat-card-subtitle>
-    <ngx-charts-bar-vertical
-      [view]="view"
-      [xAxis]="showXAxis"
-      [yAxis]="showYAxis"
-      [showXAxisLabel]="showXAxisLabel"
-      [showYAxisLabel]="showYAxisLabel"
-      [xAxisLabel]="xAxisLabel"
-      [yAxisLabel]="yAxisLabel"
-      [scheme]="colorScheme"
-      [results]="logicData">
-    </ngx-charts-bar-vertical>
-  </mat-card>
-
-  <mat-card *ngIf="agent">
-    <mat-card-title>Planning</mat-card-title>
-    <mat-card-subtitle>Individual task scores in the planning category</mat-card-subtitle>
-    <ngx-charts-bar-vertical
-      [view]="view"
-      [xAxis]="showXAxis"
-      [yAxis]="showYAxis"
-      [showXAxisLabel]="showXAxisLabel"
-      [showYAxisLabel]="showYAxisLabel"
-      [xAxisLabel]="xAxisLabel"
-      [yAxisLabel]="yAxisLabel"
-      [scheme]="colorScheme"
-      [results]="planningData">
-    </ngx-charts-bar-vertical>
-  </mat-card>
-</section>
+      <mat-card aria-label="AI planning stats">
+        <mat-card-title>Planning</mat-card-title>
+        <mat-card-subtitle>Individual task scores</mat-card-subtitle>
+        <ngx-charts-bar-vertical
+          [view]="view"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          [scheme]="colorScheme"
+          [results]="planningData">
+        </ngx-charts-bar-vertical>
+      </mat-card>
+    </section>
   </ng-container>
 </section>
-
-
-
-

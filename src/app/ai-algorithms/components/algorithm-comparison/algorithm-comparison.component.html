@@ -1,23 +1,22 @@
 <section fxLayout="column" fxFlex>
 <app-deepmind-svg></app-deepmind-svg>
-
-  <button mat-button class="back deep-mind-button" (click)= "goBack()">
+  <button mat-button
+          aria-label="back button"
+          class="back deep-mind-button"
+          (click)="goBack()">
     back
   </button>
 
-
-<header fxLayout="row" fxLayoutAlign="center center">
+<header fxLayout="row" fxLayoutAlign="center center" *ngIf="agentArray">
   <span fxFlex></span>
   <section class="title" fxLayout="column" fxFlex="60">
-    <h2>Let's see how {{testArray[0].name}} & {{testArray[1].name}} compare on average for Memory, Logic & Planning</h2>
+    <h2>Let's see how {{agentArray[0].name}} & {{agentArray[1].name}} compare on average for Memory, Logic & Planning</h2>
   </section>
   <span fxFlex></span>
 </header>
 
-
-
 <section fxLayout="row" fxLayoutAlign="center center" *ngIf="comparisonArray">
-  <mat-card class="card">
+  <mat-card class="card" aria-label="AI comparison of averages stats">
     <mat-card-content>
       <ngx-charts-bar-vertical-2d
         [view]="view"

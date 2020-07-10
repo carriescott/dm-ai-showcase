@@ -1,76 +1,91 @@
 <section fxLayout="column" fxFlex>
-<app-deepmind-svg></app-deepmind-svg>
+  <app-deepmind-svg></app-deepmind-svg>
 
-<header fxLayout="row" fxLayoutAlign="center center">
-  <span fxFlex></span>
-  <section class="title" fxLayout="column" fxFlex="60">
-    <h2>AI Showcase</h2>
-    <h2>We've pulled together our AI algorithms into one easy to search catalogue. Review & compare the
-    performance of some our favourites</h2>
+  <header fxLayout="row" fxLayoutAlign="center center">
+    <span fxFlex></span>
+    <section class="title" fxLayout="column" fxFlex="60">
+      <h2>{{title}}</h2>
+      <h2>{{description}}</h2>
+    </section>
+    <span fxFlex></span>
+  </header>
+
+  <section class="form" fxLayout="row" fxLayoutAlign="space-around center">
+    <form [formGroup]="searchForm"
+          aria-label="search form"
+          fxFlex
+          fxLayout="row"
+          fxLayoutAlign="center center">
+      <mat-form-field fxFlex>
+        <input
+          type="text"
+          matInput
+          placeholder="Search"
+          formControlName="search">
+      </mat-form-field>
+    </form>
+
+    <button class="deep-mind-button"
+            mat-button
+            aria-label="search AI algorithms"
+            [disabled]="!searchForm.controls.search.value"
+            (click)="searchAgents()"
+            *ngIf="!compare">
+      search
+    </button>
+
+    <button *ngIf="!compare"
+            class="deep-mind-button"
+            mat-button
+            aria-label="get all AI algorithms"
+            (click)="getAgents()">
+      get all AIs
+    </button>
+
+    <button *ngIf="!compare && agents.length > 1"
+            mat-button
+            class="deep-mind-button"
+            aria-label="enable selection of AI algorithms for comparison"
+            (click)="compareAIs()">
+      compare AIs
+    </button>
+
+    <button *ngIf="compare"
+            mat-button
+            class="deep-mind-button"
+            aria-label="cancel comparison selection"
+            (click)="cancelCompare()">
+      cancel
+    </button>
+
+    <button *ngIf="compare && agents"
+            [disabled]="compareDisabled"
+            mat-button class="deep-mind-button"
+            aria-label="compare AI algorithms"
+            (click)="go()">
+      compare
+    </button>
+
   </section>
-  <span fxFlex></span>
-</header>
 
-
-<section class="form" fxLayout="row"  fxLayoutAlign="space-around center">
-  <form [formGroup]="searchForm"
-        fxFlex
-        fxLayout="row"
-        fxLayoutAlign="center center">
-    <mat-form-field fxFlex>
-      <input
-        type="text"
-        matInput
-        placeholder="Search"
-        formControlName="search">
-    </mat-form-field>
-  </form>
-
-  <button class="deep-mind-button"
-          mat-button aria-label="Search"
-          [disabled]="!searchForm.controls.search.value"
-          (click)="searchAgents()"
-          *ngIf="!compare">
-    search
-  </button>
-
-  <button *ngIf="!compare" class="deep-mind-button" mat-button aria-label="Get all AI Algorithms" (click)="getAgents()">
-    Get All AIs
-  </button>
-
-  <button *ngIf="!compare && agents.length > 1"
-          mat-button
-          class="deep-mind-button"
-          id="compare-ai"(click)="compareAIs()">
-    Compare AIs
-  </button>
-
-  <button *ngIf="compare" mat-button class="deep-mind-button" id="cancel"(click)="cancelCompare()">
-    Cancel
-  </button>
-
-  <button *ngIf="compare && agents"
-          [disabled]="compareDisabled"
-          mat-button class="deep-mind-button"
-          (click)= "go()">
-    Compare
-  </button>
-
-</section>
-
-  <section class="loading-container" fxFlex fxLayout="row" fxLayoutAlign="center center" *ngIf="loading">
+  <section fxFlex
+           fxLayout="row"
+           fxLayoutAlign="center center"
+           *ngIf="loading">
     <app-loading fxLayoutAlign="center center"></app-loading>
   </section>
 
-  <section class="loading-container" fxFlex fxLayout="row" fxLayoutAlign="center center" *ngIf="!loading && error">
+  <section fxFlex fxLayout="row"
+           fxLayoutAlign="center center"
+           *ngIf="!loading && error">
     <app-error
       [errorMessage]="errorMessage"
       fxLayoutAlign="center center">
     </app-error>
   </section>
 
-  <section class="results" *ngIf="agents && !loading && !error">
-      <h3>Results: {{agents.length}}</h3>
+  <section class="results-text" *ngIf="results">
+    <h3 aria-label="AI algorithms results count">Results: {{agents.length}}</h3>
   </section>
 
   <section *ngIf="agents && !loading && !compare" fxLayout="row" fxLayoutAlign="center center">
@@ -86,7 +101,7 @@
   </section>
 
   <section *ngIf="agents && !loading && compare" fxLayout="row" fxLayoutAlign="center center">
-    <mat-selection-list #items (selectionChange)="onSelection($event, items.selectedOptions)">
+    <mat-selection-list #items (selectionChange)="onSelection(items.selectedOptions)">
       <mat-list-option #item *ngFor="let agent of agents" [value]="agent"
                        [disabled]="items.selectedOptions.selected.length > 1 && !item.selected">
         <h2 matLine> {{agent.name}} </h2>
