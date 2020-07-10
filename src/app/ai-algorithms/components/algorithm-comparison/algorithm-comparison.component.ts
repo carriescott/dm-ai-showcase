@@ -37,9 +37,9 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
   gradient = false;
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Task';
+  xAxisLabel = 'category';
   showYAxisLabel = true;
-  yAxisLabel = 'Average Score';
+  yAxisLabel = 'average score';
   legendTitle = 'AI';
   view: any[] = [600];
   colorScheme = {
@@ -68,7 +68,7 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
   }
 
   /**** Build an array of average objects,
-   * one object per agent */
+   * one object per AI agent */
   buildAveragesArray(agents){
     for (const agent of agents) {
       const result = this.buildCategoryScoreArrays(agent);
@@ -124,8 +124,8 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
     ];
   }
 
-  /**** Build an array for each of the task category to
-   * hold all the scores in tha category */
+  /**** Build an array for each of the task categories to
+   * hold all the scores in that category */
   buildCategoryScoreArrays(item) {
     this.emptyArrays();
     for (const task of item.tasks) {
@@ -145,7 +145,7 @@ export class AlgorithmComparisonComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  /**** Build an object of category averages */
+  /**** Build an object of category task averages */
   buildAvgObj(item) {
     this.memoryAverage = calAverage(this.memoryScores, this.memoryScores.length);
     this.logicAverage = calAverage(this.logicScores, this.logicScores.length);

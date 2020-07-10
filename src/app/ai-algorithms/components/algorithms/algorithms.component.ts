@@ -20,7 +20,7 @@ export class AlgorithmsComponent implements OnInit {
   selectedAgents;
   errorMessage: string;
 
-  /*** Set UI flags*/
+  /*** Set UI flags */
   compare = false;
   error = false;
   compareDisabled = true;
@@ -37,7 +37,7 @@ export class AlgorithmsComponent implements OnInit {
     });
   }
 
-  /*** Fetch all agents*/
+  /*** Fetch all AI agents */
   getAgents() {
    this.resetVariables();
    this.agentsApi.listAgents()
@@ -52,7 +52,7 @@ export class AlgorithmsComponent implements OnInit {
       });
   }
 
-  /*** Fetch all agents containing a specific string*/
+  /*** Fetch all AI agents with name containing a specific string */
   searchAgents() {
     this.resetVariables();
     this.agentsApi.searchAgents(this.searchForm.controls.search.value)
@@ -83,13 +83,13 @@ export class AlgorithmsComponent implements OnInit {
     this.compare = false;
   }
 
-  /*** Publish array of selected AI agents to be compared*/
+  /*** Publish array of selected AI agents to compare */
   go() {
     this.agentsApi.publishAgentArray(this.selectedAgents);
     this.router.navigate(['/ai-algorithms/algorithm-comparison']);
   }
 
-  /*** Select AI agents to compare*/
+  /*** Select AI agents to compare */
   onSelection(options){
     this.selectedAgents = options.selected.map(item => item.value);
     this.compareDisabled = this.selectedAgents.length < 2;

@@ -18,17 +18,17 @@ export class AlgorithmDetailComponent implements OnInit {
 
   memoryScores = [];
   memoryAverage;
-  memoryGames = [];
+  memoryTasks = [];
   memoryData;
 
   logicScores = [];
   logicAverage;
-  logicGames = [];
+  logicTasks = [];
   logicData;
 
   planningScores = [];
   planningAverage;
-  planningGames = [];
+  planningTasks = [];
   planningData;
 
   /*** Set UI flags */
@@ -39,9 +39,11 @@ export class AlgorithmDetailComponent implements OnInit {
   showXAxis = true;
   showYAxis = true;
   showXAxisLabel = true;
-  xAxisLabel = 'game';
+  xAxisLabel = 'task';
+  xAxisLabelCategory = 'category';
   showYAxisLabel = true;
   yAxisLabel = 'score';
+  yAxisLabelAverage = 'average score';
   view = [400];
   colorScheme = {
     domain: ['#0053d6', '#14234b', '#ff4081']
@@ -56,7 +58,7 @@ export class AlgorithmDetailComponent implements OnInit {
     this.getAgent(id);
   }
 
-  /*** Fetch agent with specific id */
+  /*** Fetch AI agent with specific id */
   getAgent(id) {
     this.loading = true;
     this.error = false;
@@ -72,21 +74,21 @@ export class AlgorithmDetailComponent implements OnInit {
     });
   }
 
-  /**** Build 2 arrays for each of the task categories, one for scores and the other for games */
+  /**** Build 2 arrays for each of the task categories, one for scores and the other for tasks */
   buildStatsArrays() {
     for (const task of this.agent.tasks) {
       switch (task.category) {
         case 'memory':
           this.memoryScores.push(task.score);
-          this.memoryGames.push(task);
+          this.memoryTasks.push(task);
           break;
         case 'logic':
           this.logicScores.push(task.score);
-          this.logicGames.push(task);
+          this.logicTasks.push(task);
           break;
         case 'planning':
           this.planningScores.push(task.score);
-          this.planningGames.push(task);
+          this.planningTasks.push(task);
           break;
       }
     }
@@ -94,40 +96,40 @@ export class AlgorithmDetailComponent implements OnInit {
     this.buildComparisonArray();
   }
 
-  /**** Format games arrays for each of the task categories,
-   * to create data sets which can be used to generate each category graph */
+  /**** Format category Tasks arrays, in order to create data sets
+   * which can be used to generate each category tasks graph */
   buildGraphData() {
-    this.memoryData = this.memoryGames.map(item => ({
+    this.memoryData = this.memoryTasks.map(item => ({
       name: item.name,
       value: item.score
     }));
-    this.logicData = this.logicGames.map(item => ({
+    this.logicData = this.logicTasks.map(item => ({
       name: item.name,
       value: item.score
     }));
-    this.planningData = this.planningGames.map(item => ({
+    this.planningData = this.planningTasks.map(item => ({
       name: item.name,
       value: item.score
     }));
   }
 
-  /**** Build an array of category averages to create a data set, 'averages'
-   *  which can be used to generate the overview graph */
+  /**** Build an array of category averages to create a data set, 'averages',
+   *  which can be used to generate the overview/averages comparison graph */
   buildComparisonArray() {
     this.memoryAverage = calAverage(this.memoryScores, this.memoryScores.length);
     this.logicAverage = calAverage(this.logicScores, this.logicScores.length);
     this.planningAverage = calAverage(this.planningScores, this.planningScores.length);
     this.averages = [
       {
-        name: 'memory',
+        name: 'Memory',
         value: this.memoryAverage
       },
       {
-        name: 'logic',
+        name: 'Logic',
         value: this.logicAverage
       },
       {
-        name: 'planning',
+        name: 'Planning',
         value: this.planningAverage
       },
     ];
